@@ -29,24 +29,3 @@ def welcom():
 @app.route('/auth')
 def index():
     return render_template('view/auth.html')
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    data = request.form
-    name = data.get('name')
-    email = data.get('email')
-    
-    if name and email:
-        try:
-            # Store data in SQLite database
-            conn = sqlite3.connect('database.db')
-            c = conn.cursor()
-            c.execute("INSERT INTO submissions (name, email) VALUES (?, ?)", (name, email))
-            conn.commit()
-            conn.close()
-            return jsonify({'message': 'Merci pour votre soumission !'}), 200
-        except Error as e:
-            print(f"Error saving to database: {e}")
-            return jsonify({'message': 'Erreur lors de l\'enregistrement.'}), 500
-    else:
-        return jsonify({'message': 'Veuillez remplir tous les champs.'}), 400
